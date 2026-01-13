@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stjernene våre</title>
+  <style>
+    :root{
+      --bg1:#050815;
+      --bg2:#0b1230;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --line: rgba(255,255,255,.14);
+      --accent: #9cc4ff;
+      --accent2:#ffd6a6;
+      --good:#a8ffcb;
+      --danger:#ff9fb3;
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 30% 20%, #1a2a6c22, transparent 70%),
+                  radial-gradient(1000px 700px at 80% 10%, #ffb86b18, transparent 65%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .stars, .stars2{
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      background-repeat: repeat;
+      opacity:.9;
+    }
+    .stars{
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1px 1px at 140px 80px, rgba(255,255,255,.70), transparent 60%),
+        radial-gradient(1px 1px at 60px 160px, rgba(255,255,255,.75), transparent 60%),
+        radial-gradient(2px 2px at 220px 140px, rgba(255,255,255,.85), transparent 60%),
+        radial-gradient(1px 1px at 320px 40px, rgba(255,255,255,.60), transparent 60%),
+        radial-gradient(1px 1px at 380px 180px, rgba(255,255,255,.55), transparent 60%);
+      background-size: 420px 220px;
+      filter: blur(.2px);
+      animation: drift 26s linear infinite;
+    }
+    .stars2{
+      background-image:
+        radial-gradient(1px 1px at 35px 55px, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(1px 1px at 120px 120px, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 240px 30px, rgba(255,255,255,.45), transparent 60%),
+        radial-gradient(1px 1px at 310px 170px, rgba(255,255,255,.40), transparent 60%),
+        radial-gradient(1px 1px at 390px 90px, rgba(255,255,255,.30), transparent 60%);
+      background-size: 420px 220px;
+      opacity:.55;
+      animation: drift2 42s linear infinite;
+    }
+    @keyframes drift { from{transform:translate3d(0,0,0)} to{transform:translate3d(-120px,60px,0)} }
+    @keyframes drift2 { from{transform:translate3d(0,0,0)} to{transform:translate3d(-70px,35px,0)} }
+
+    header{
+      max-width:1100px;
+      margin: 24px auto 0;
+      padding: 0 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      padding: 10px 14px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 18px #9cc4ff66;
+    }
+    .brand h1{
+      font-size:14px; letter-spacing:.4px; margin:0; font-weight:650;
+    }
+    nav{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .tab{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-size:13px;
+      transition: transform .08s ease, background .2s ease, border .2s ease;
+      backdrop-filter: blur(10px);
+    }
+    .tab:hover{ background: rgba(255,255,255,.08) }
+    .tab:active{ transform: translateY(1px) }
+    .tab.active{
+      border-color: rgba(156,196,255,.55);
+      background: linear-gradient(180deg, rgba(156,196,255,.20), rgba(255,255,255,.04));
+    }
+
+    main{
+      max-width:1100px;
+      margin: 18px auto 60px;
+      padding: 0 16px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+    }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr; }
+      nav{ justify-content:flex-start; }
+    }
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+    .card .inner{ padding: 18px; }
+    .title{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .title h2{ margin:0; font-size:18px; font-weight:700; }
+    .title p{ margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.5; }
+    .sep{ height:1px; background: var(--line); margin: 14px 0; }
+
+    .hero{
+      min-height: 240px;
+      position:relative;
+      display:flex;
+      align-items:flex-end;
+      padding: 18px;
+      background:
+        radial-gradient(800px 260px at 20% 10%, #9cc4ff22, transparent 60%),
+        radial-gradient(700px 260px at 80% 20%, #ffd6a622, transparent 65%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .hero .big{
+      font-size: 22px;
+      line-height: 1.25;
+      font-weight: 750;
+      margin: 0;
+      max-width: 38ch;
+      text-shadow: 0 12px 30px rgba(0,0,0,.5);
+    }
+    .hero .small{
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      margin-top: 12px;
+      border:1px solid var(--line);
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.20);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pill b{ color: var(--text); font-weight:650; }
+    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    button{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-size:13px;
+      transition: transform .08s ease, background .2s ease, border .2s ease;
+    }
+    button:hover{ background: rgba(255,255,255,.10) }
+    button:active{ transform: translateY(1px) }
+    .primary{
+      border-color: rgba(156,196,255,.55);
+      background: linear-gradient(180deg, rgba(156,196,255,.20), rgba(255,255,255,.04));
+    }
+    .danger{
+      border-color: rgba(255,159,179,.55);
+      background: linear-gradient(180deg, rgba(255,159,179,.18), rgba(255,255,255,.03));
+    }
+    .ghost{
+      background: transparent;
+    }
+    input, textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline:none;
+      font-size: 13px;
+    }
+    textarea{ min-height: 80px; resize: vertical; }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+      display:block;
+      margin: 10px 0 6px;
+    }
+
+    .note{
+      border: 1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* Timeline */
+    .timeline{
+      position:relative;
+      padding-left: 14px;
+    }
+    .timeline:before{
+      content:"";
+      position:absolute;
+      left:6px; top:6px; bottom:6px;
+      width:2px; background: rgba(255,255,255,.14);
+      border-radius: 2px;
+    }
+    .tcard{
+      position:relative;
+      margin: 12px 0;
+      padding: 12px 12px 12px 14px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+    }
+    .tcard:before{
+      content:"";
+      position:absolute;
+      left:-12px; top: 16px;
+      width:12px; height:12px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 16px rgba(156,196,255,.35);
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .tmeta{
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    }
+    .tdate{
+      font-size:12px; color: var(--accent);
+      letter-spacing:.2px;
+    }
+    .ttext{
+      margin: 8px 0 0;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .timg{
+      margin-top: 10px;
+      width:100%;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.14);
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: rgba(0,0,0,.2);
+    }
+    .minirow{
+      display:flex; gap:8px; align-items:center; justify-content:flex-end;
+    }
+    .mini{
+      padding: 6px 8px;
+      border-radius: 10px;
+      font-size:12px;
+      opacity:.9;
+    }
+
+    /* Modal */
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 50;
+    }
+    .overlay.show{ display:flex; }
+    .modal{
+      width:min(720px, 100%);
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(22,28,58,.95), rgba(10,12,26,.92));
+      border-radius: 18px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.6);
+      overflow:hidden;
+    }
+    .modal .bar{
+      padding: 12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .modal .bar h3{ margin:0; font-size:14px; letter-spacing:.2px; }
+    .close{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size:12px;
+    }
+    .modal .content{ padding: 14px; }
+    .bigmsg{
+      font-size: 18px;
+      line-height:1.5;
+      margin: 8px 0 0;
+      color: var(--text);
+    }
+    .muted{ color: var(--muted); font-size: 13px; line-height:1.5; }
+
+    /* Hug animation */
+    .hug{
+      position:fixed;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      width: 14px; height: 14px;
+      border-radius:50%;
+      pointer-events:none;
+      opacity:0;
+      z-index: 60;
+    }
+    .hug.show{
+      animation: pop 1.2s ease forwards;
+    }
+    @keyframes pop{
+      0%{ opacity:0; transform: translate(-50%,-50%) scale(.2); filter: blur(0); }
+      15%{ opacity:1; transform: translate(-50%,-50%) scale(1.2); }
+      60%{ opacity:1; transform: translate(-50%,-50%) scale(20); filter: blur(0); }
+      100%{ opacity:0; transform: translate(-50%,-50%) scale(24); filter: blur(2px); }
+    }
+
+    .kicker{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .badge{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+    .rightcol .card{ position:sticky; top: 14px; }
+    @media (max-width: 900px){
+      .rightcol .card{ position:static; }
+    }
+
+    .hidden{ display:none !important; }
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .item b{ font-weight:700; }
+    .item .small{ color: var(--muted); font-size:12px; margin-top:6px; }
+
+    .draw{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+    }
+    .draw .ticket{
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    .draw .hint{
+      font-size: 12px; color: var(--muted);
+    }
+
+    footer{
+      max-width:1100px;
+      margin: 0 auto 30px;
+      padding: 0 16px;
+      color: rgba(255,255,255,.45);
+      font-size: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    a{ color: var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+  </style>
+</head>
+
+<body>
+  <div class="stars"></div>
+  <div class="stars2"></div>
+
+  <header>
+    <div class="brand">
+      <div class="dot"></div>
+      <h1>Stjernene våre</h1>
+    </div>
+    <nav id="nav">
+      <button class="tab active" data-view="home">Forside</button>
+      <button class="tab" data-view="timeline">Minnekart</button>
+      <button class="tab" data-view="jar">Fremtidskrukke</button>
+      <button class="tab" data-view="secret">Hemmelighet</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="view-home">
+      <div class="grid">
+        <div class="leftcol">
+          <div class="card">
+            <div class="hero">
+              <div>
+                <p class="big" id="frontLine">Vi ser på de samme stjernene i kveld også.</p>
+                <p class="small" id="frontSub">
+                  En liten privat verden – bare for dere. Når avstand kjennes litt for langt, kan dere alltid komme hit.
+                </p>
+                <div class="pill">
+                  <span>📍</span>
+                  <span>I kveld er vi under <b>samme himmel</b>.</span>
+                </div>
+                <div class="btnrow">
+                  <button class="primary" id="btnOpenToday">Åpne i dag</button>
+                  <button id="btnHug">Send et klem</button>
+                  <button class="danger" id="btnNeed">Jeg trenger deg litt nå</button>
+                </div>
+              </div>
+            </div>
+            <div class="inner">
+              <div class="title">
+                <div>
+                  <h2>Dagens lille ting</h2>
+                  <p>Trykk “Åpne i dag” – dere får én ny linje per dag (lagres så den ikke endrer seg).</p>
+                </div>
+                <div class="kicker">
+                  <span class="badge" id="todayBadge">Ikke åpnet i dag</span>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="note" id="todayBox">
+                <div style="display:flex; gap:10px; align-items:flex-start;">
+                  <div style="font-size:16px;">✨</div>
+                  <div>
+                    <div style="color:var(--text); font-weight:700; margin-bottom:6px;">Klar når du er klar</div>
+                    <div>Dette er deres lille “god natt”-rom. En setning. Et minne. En trygg følelse.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <details>
+                <summary style="cursor:pointer; color:var(--muted); font-size:13px;">
+                  Vil du redigere teksten på forsiden?
+                </summary>
+                <label>Hovedlinje</label>
+                <input id="editFrontLine" placeholder="Skriv en linje..." />
+                <label>Undertekst</label>
+                <textarea id="editFrontSub" placeholder="Skriv en kort undertekst..."></textarea>
+                <div class="btnrow">
+                  <button class="primary" id="saveFront">Lagre</button>
+                  <button class="ghost" id="resetFront">Tilbakestill</button>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div class="rightcol">
+          <div class="card">
+            <div class="inner">
+              <div class="title">
+                <div>
+                  <h2>Rask oppdatering</h2>
+                  <p>Legg inn en ny minnekort eller en ny lapp til fremtidskrukka, uten å gjøre et “prosjekt” av det.</p>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div>
+                <h3 style="margin:0 0 8px; font-size:14px;">Legg til minnekort</h3>
+                <label>Dato (f.eks. 2026-01-13)</label>
+                <input id="memDate" placeholder="YYYY-MM-DD" />
+                <label>Hva gjorde dagen fin?</label>
+                <textarea id="memText" placeholder="Et lite minne..."></textarea>
+                <label>Bilde (valgfritt)</label>
+                <input id="memImgFile" type="file" accept="image/*" />
+                <div class="muted" style="margin-top:8px;">Du kan velge bilde fra filer/kamerarull.</div>
+                <img id="memPreview" class="timg" style="display:none; margin-top:10px;" alt="Forhåndsvisning" />
+                <input id="memImgFile" type="file" accept="image/*" capture="environment" />
+
+                <div class="btnrow">
+                  <button class="primary" id="addMemory">Legg til</button>
+                </div>
+                <div class="muted" style="margin-top:8px;">
+                  Tips: Bilde-URL kan være fra et bilde dere har lastet opp et sted. Eller la det stå tomt.
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div>
+                <h3 style="margin:0 0 8px; font-size:14px;">Legg til fremtidslapp</h3>
+                <label>Forslag</label>
+                <input id="jarIdea" placeholder="Ting vi skal gjøre når vi møtes..." />
+                <div class="btnrow">
+                  <button class="primary" id="addJar">Legg til lapp</button>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <button class="ghost" id="exportData">Eksporter data (kopier)</button>
+              <p class="muted" style="margin:8px 0 0;">
+                Praktisk hvis dere bytter enhet: kopier JSON og lim inn på den andre.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="view-timeline" class="hidden">
+      <div class="card">
+        <div class="inner">
+          <div class="title">
+            <div>
+              <h2>Minnekart</h2>
+              <p>Små kort dere kan bla i. Dato + et bilde + hva som gjorde dagen fin.</p>
+            </div>
+            <div class="kicker">
+              <span class="badge" id="memCount">0 minner</span>
+            </div>
+          </div>
+          <div class="sep"></div>
+
+          <div class="timeline" id="timelineList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JAR -->
+    <section id="view-jar" class="hidden">
+      <div class="card">
+        <div class="inner">
+          <div class="title">
+            <div>
+              <h2>Fremtidskrukke</h2>
+              <p>Ting vi skal gjøre når vi møtes. Legg til forslag – trekk en tilfeldig “lapp”.</p>
+            </div>
+            <div class="kicker">
+              <span class="badge" id="jarCount">0 lapper</span>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="draw">
+            <div>
+              <div class="hint">Trekk en lapp</div>
+              <div class="ticket" id="drawnTicket">Trykk “Trekk” når dere vil drømme litt.</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button class="primary" id="drawJar">Trekk</button>
+              <button id="clearDraw">Nullstill</button>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="list" id="jarList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECRET -->
+    <section id="view-secret" class="hidden">
+      <div class="card">
+        <div class="inner">
+          <div class="title">
+            <div>
+              <h2>Liten hemmelighet</h2>
+              <p>Skriv inn koden (f.eks. et kallenavn) for å åpne en ekstra side med en lengre tekst.</p>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <label>Kode</label>
+          <input id="secretCodeInput" placeholder="Skriv koden deres..." />
+          <div class="btnrow">
+            <button class="primary" id="openSecret">Åpne</button>
+            <button class="ghost" id="setSecretCode">Sett/endre kode</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div id="secretArea" class="hidden">
+            <div class="note">
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <div style="font-size:16px;">🔒</div>
+                <div>
+                  <div style="color:var(--text); font-weight:700; margin-bottom:6px;">Bare for dere</div>
+                  <div id="secretText" class="muted"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
+            <details>
+              <summary style="cursor:pointer; color:var(--muted); font-size:13px;">
+                Rediger hemmelig tekst / lyd
+              </summary>
+
+              <label>Hemmelig tekst</label>
+              <textarea id="secretTextEdit" placeholder="Skriv en lengre tekst..."></textarea>
+
+              <label>Lyd (valgfritt)</label>
+              <input id="secretAudio" placeholder="Lim inn en URL til en lydfil (mp3) hvis du har" />
+
+              <div class="btnrow">
+                <button class="primary" id="saveSecret">Lagre</button>
+              </div>
+
+              <div class="muted" style="margin-top:8px;">
+                Lyd: enklest hvis du legger en mp3 et sted som gir direkte lenke. Hvis ikke, dropp lyd – teksten gjør jobben.
+              </div>
+            </details>
+
+            <div id="audioWrap" class="hidden" style="margin-top:12px;">
+              <audio id="audioPlayer" controls style="width:100%;"></audio>
+            </div>
+          </div>
+
+          <div id="secretHint" class="note">
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <div style="font-size:16px;">💡</div>
+              <div>
+                <div style="color:var(--text); font-weight:700; margin-bottom:6px;">Lite tips</div>
+                <div>
+                  Sett koden til et kallenavn eller en intern vits dere alltid bruker. Da føles siden “låst” på en søt måte.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© Stjernene våre — en liten privat verden.</div>
+    <div>Alt lagres lokalt i nettleseren (localStorage).</div>
+  </footer>
+
+  <!-- MODALS -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="bar">
+        <h3 id="modalTitle">Melding</h3>
+        <button class="close" id="closeModal">Lukk</button>
+      </div>
+      <div class="content">
+        <div class="muted" id="modalSub"></div>
+        <div class="bigmsg" id="modalMsg"></div>
+
+        <div id="needActions" class="hidden" style="margin-top:14px;">
+          <div class="sep"></div>
+          <div class="list" id="needList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hug" id="hugFX"></div>
+
+  <script>
+    /***********************
+     * ENKELT Å OPPDATERE
+     ***********************/
+    const DEFAULTS = {
+      frontLine: "Vi ser på de samme stjernene i kveld også.",
+      frontSub: "En liten privat verden – bare for dere. Når avstand kjennes litt for langt, kan dere alltid komme hit.",
+      dailyPool: [
+        "I dag savner jeg måten du roer hele verden min på.",
+        "Et lite minne: den gangen vi lo av ingenting – og det var alt.",
+        "Hvis du var her nå, hadde jeg bare holdt rundt deg litt ekstra lenge.",
+        "Jeg elsker deg i små øyeblikk også. Særlig de som bare vi merker.",
+        "I dag savner jeg stemmen din. Bare si hei, så blir alt litt lettere.",
+        "Hver gang jeg ser månen, tenker jeg at den passer på oss begge.",
+        "Jeg gleder meg til å se deg igjen – helt uten å telle dagene.",
+        "Du er favorittstedet mitt, selv når du er langt unna.",
+        "Et lite løfte: jeg velger deg, igjen og igjen.",
+        "I dag vil jeg sende deg en rolig klem og en varm tanke."
+      ],
+      hugLines: [
+        "Kom hit. Bare et lite digitalt klem – men ment på ekte.",
+        "Klem sendt. Jeg holder deg litt ekstra lenge i tankene.",
+        "Hvis du lukker øynene nå: det er meg som klemmer deg.",
+        "Klem. Med den myke tryggheten du alltid gir meg tilbake."
+      ],
+      needActions: [
+        { title: "Hør på sangen vår", desc: "Sett på den sangen som alltid føles som oss.", link: "" },
+        { title: "Les en melding fra meg", desc: "“Jeg er her. Du er ikke alene. Jeg elsker deg.”", link: "" },
+        { title: "Se et bilde", desc: "Finn et bilde som minner deg om en fin dag – og pust rolig.", link: "" }
+      ],
+      secretCode: "stjerne",
+      secretText: "Hei du. Dette er den siden som bare åpner seg når du bruker vårt lille ord. Hvis du leser dette nå, vil jeg at du skal vite at jeg er stolt av deg – og at jeg elsker deg på en måte som gjør avstand litt mindre farlig. Når det blir tungt: legg hånden på brystet og pust rolig. Jeg er der, i tankene mine, med deg.",
+      secretAudio: "",
+      memories: [
+        // Du kan starte tomt, eller legge inn noen eksempler:
+        // { id, date:"2025-12-24", text:"Vi gikk en tur i kulda og holdt hender.", img:"https://..." }
+      ],
+      jar: [
+        "Lage frokost sammen og ikke skynde oss",
+        "Gå en lang kveldstur og snakke om alt",
+        "Se en film under samme teppe",
+        "Kaffe på et sted vi aldri har vært før"
+      ]
+    };
+
+    /***********************
+     * STORAGE
+     ***********************/
+    const KEY = "stjernene_v1";
+    const load = () => {
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return structuredClone(DEFAULTS);
+        const parsed = JSON.parse(raw);
+        // merge defaults (for nye felt i fremtiden)
+        return {
+          ...structuredClone(DEFAULTS),
+          ...parsed,
+          needActions: parsed.needActions ?? structuredClone(DEFAULTS.needActions),
+          memories: parsed.memories ?? [],
+          jar: parsed.jar ?? []
+        };
+      }catch(e){
+        return structuredClone(DEFAULTS);
+      }
+    };
+    const save = () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state));
+        return true;
+      } catch (e) {
+        openModal(
+          "Lagring nesten full",
+          "Nettleseren din har ikke mer plass til å lagre bilder lokalt.",
+          "Tips: Slett noen gamle minnekort, eller bruk mindre bilder (de komprimeres allerede)."
+        );
+        return false;
+      }
+    };
+
+    let state = load();
+
+    /***********************
+     * HELPERS
+     ***********************/
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => [...document.querySelectorAll(sel)];
+    const todayKey = () => {
+      // stabil per dag (lokal dato)
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    };
+    const rand = (arr) => arr[Math.floor(Math.random()*arr.length)];
+    const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
+
+    /***********************
+     * NAV / VIEWS
+     ***********************/
+    function showView(name){
+      $$("#nav .tab").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+      $$("#view-home, #view-timeline, #view-jar, #view-secret").forEach(v => v.classList.add("hidden"));
+      $(`#view-${name}`).classList.remove("hidden");
+      if(name === "timeline") renderTimeline();
+      if(name === "jar") renderJar();
+    }
+    $$("#nav .tab").forEach(b => b.addEventListener("click", () => showView(b.dataset.view)));
+
+    /***********************
+     * FRONT TEXT
+     ***********************/
+    function renderFront(){
+      $("#frontLine").textContent = state.frontLine;
+      $("#frontSub").textContent = state.frontSub;
+      $("#editFrontLine").value = state.frontLine;
+      $("#editFrontSub").value = state.frontSub;
+    }
+    $("#saveFront").addEventListener("click", () => {
+      state.frontLine = $("#editFrontLine").value.trim() || DEFAULTS.frontLine;
+      state.frontSub = $("#editFrontSub").value.trim() || DEFAULTS.frontSub;
+      save(); renderFront();
+    });
+    $("#resetFront").addEventListener("click", () => {
+      state.frontLine = DEFAULTS.frontLine;
+      state.frontSub = DEFAULTS.frontSub;
+      save(); renderFront();
+    });
+
+    /***********************
+     * MODAL
+     ***********************/
+    function openModal(title, msg, sub=""){
+      $("#modalTitle").textContent = title;
+      $("#modalMsg").textContent = msg;
+      $("#modalSub").textContent = sub;
+      $("#needActions").classList.add("hidden");
+      $("#overlay").classList.add("show");
+    }
+    function closeModal(){
+      $("#overlay").classList.remove("show");
+    }
+    $("#closeModal").addEventListener("click", closeModal);
+    $("#overlay").addEventListener("click", (e) => {
+      if(e.target.id === "overlay") closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeModal();
+    });
+
+    /***********************
+     * DAILY MESSAGE
+     ***********************/
+    function renderDailyStatus(){
+      const k = todayKey();
+      const opened = (state.dailyOpened && state.dailyOpened.date === k);
+      $("#todayBadge").textContent = opened ? `Åpnet: ${k}` : "Ikke åpnet i dag";
+    }
+
+    function openToday(){
+      const k = todayKey();
+      state.dailyOpened = state.dailyOpened || {};
+      if(state.dailyOpened.date !== k){
+        // velg en ny setning for denne dagen
+        state.dailyOpened = { date: k, text: rand(state.dailyPool) };
+        save();
+      }
+      $("#todayBox").innerHTML = `
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="font-size:16px;">✨</div>
+          <div>
+            <div style="color:var(--muted); font-size:12px; margin-bottom:6px;">Dagens linje (${k})</div>
+            <div style="color:var(--text); font-weight:750; font-size:16px; line-height:1.5;">
+              ${escapeHtml(state.dailyOpened.text)}
+            </div>
+          </div>
+        </div>`;
+      renderDailyStatus();
+    }
+    $("#btnOpenToday").addEventListener("click", openToday);
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    /***********************
+     * HUG
+     ***********************/
+    function sendHug(){
+      const line = rand(state.hugLines);
+      // FX
+      const fx = $("#hugFX");
+      fx.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,214,166,.55), rgba(156,196,255,.22), transparent 70%)`;
+      fx.classList.remove("show");
+      // restart animation
+      void fx.offsetWidth;
+      fx.classList.add("show");
+
+      openModal("Sendt klem 🤍", line, "Et lite digitalt klem, men ment helt på ekte.");
+    }
+    $("#btnHug").addEventListener("click", sendHug);
+
+    /***********************
+     * NEED YOU
+     ***********************/
+    function needYou(){
+      $("#modalTitle").textContent = "Jeg er her.";
+      $("#modalSub").textContent = "Hvis du trenger meg litt nå, kan du gjøre én av disse tre tingene:";
+      $("#modalMsg").textContent = "Velg den som føles enklest akkurat nå.";
+
+      const list = $("#needList");
+      list.innerHTML = "";
+      state.needActions.slice(0,3).forEach((a, idx) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        const hasLink = a.link && a.link.trim().length > 0;
+        div.innerHTML = `
+          <b>${escapeHtml(a.title || ("Ting " + (idx+1)))}</b>
+          <div class="small">${escapeHtml(a.desc || "")}</div>
+          ${hasLink ? `<div class="small" style="margin-top:8px;"><a href="${escapeHtml(a.link)}" target="_blank" rel="noopener">Åpne</a></div>` : ""}
+        `;
+        list.appendChild(div);
+      });
+
+      $("#needActions").classList.remove("hidden");
+      $("#overlay").classList.add("show");
+    }
+    $("#btnNeed").addEventListener("click", needYou);
+
+    /***********************
+     * MEMORIES
+     ***********************/
+    function sortMemories(){
+      // nyeste først (dato som tekst YYYY-MM-DD)
+      state.memories.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+    }
+
+    function renderTimeline(){
+      sortMemories();
+      $("#memCount").textContent = `${state.memories.length} minner`;
+      const wrap = $("#timelineList");
+      wrap.innerHTML = "";
+
+      if(state.memories.length === 0){
+        wrap.innerHTML = `<div class="note">Ingen minner enda. Legg til det første fra forsiden ❤️</div>`;
+        return;
+      }
+
+      state.memories.forEach(m => {
+        const card = document.createElement("div");
+        card.className = "tcard";
+        const img = (m.img && m.img.trim().length) ? `
+          <img class="timg" src="${escapeHtml(m.img)}" alt="Minne-bilde" loading="lazy" />
+        ` : "";
+        card.innerHTML = `
+          <div class="tmeta">
+            <div class="tdate">${escapeHtml(m.date || "")}</div>
+            <div class="minirow">
+              <button class="mini danger" data-del="${m.id}">Slett</button>
+            </div>
+          </div>
+          <div class="ttext">${escapeHtml(m.text || "")}</div>
+          ${img}
+        `;
+        wrap.appendChild(card);
+      });
+
+      // delete handlers
+      $$("[data-del]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-del");
+          state.memories = state.memories.filter(x => x.id !== id);
+          save(); renderTimeline();
+        });
+      });
+    }
+
+    $("#addMemory").addEventListener("click", () => {
+      const date = $("#memDate").value.trim() || todayKey();
+      const text = $("#memText").value.trim();
+      const img = pendingMemImage || "";
+      state.memories.unshift({ id: uid(), date, text, img });
+
+      // reset
+      pendingMemImage = "";
+      $("#memImgFile").value = "";
+      $("#memPreview").style.display = "none";
+      $("#memPreview").removeAttribute("src");
+
+      save();
+      openModal("Lagt til ✨", "Minnekortet er lagret. Dere bygger historien deres litt etter litt.");
+    });
+
+    /***********************
+     * JAR
+     ***********************/
+    function renderJar(){
+      $("#jarCount").textContent = `${state.jar.length} lapper`;
+      const list = $("#jarList");
+      list.innerHTML = "";
+
+      if(state.jar.length === 0){
+        list.innerHTML = `<div class="note">Ingen lapper enda. Legg til en fra forsiden ❤️</div>`;
+        return;
+      }
+
+      state.jar.forEach((idea, i) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <b>#${i+1}</b>
+          <div class="small" style="margin-top:6px;">${escapeHtml(idea)}</div>
+          <div class="minirow" style="margin-top:10px;">
+            <button class="mini danger" data-jar-del="${i}">Slett</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+
+      $$("[data-jar-del]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.getAttribute("data-jar-del"));
+          state.jar.splice(idx,1);
+          save(); renderJar();
+        });
+      });
+    }
+
+    $("#addJar").addEventListener("click", () => {
+      const idea = $("#jarIdea").value.trim();
+      if(!idea){
+        openModal("Liten ting", "Skriv en idé til fremtidskrukka først.");
+        return;
+      }
+      state.jar.unshift(idea);
+      $("#jarIdea").value = "";
+      save();
+      openModal("Lapp lagt i krukka 🫙", "Gleder meg allerede til den dagen.");
+    });
+
+    $("#drawJar").addEventListener("click", () => {
+      if(state.jar.length === 0){
+        $("#drawnTicket").textContent = "Krukka er tom. Legg inn en idé først.";
+        return;
+      }
+      $("#drawnTicket").textContent = rand(state.jar);
+    });
+    $("#clearDraw").addEventListener("click", () => {
+      $("#drawnTicket").textContent = "Trykk “Trekk” når dere vil drømme litt.";
+    });
+
+    /***********************
+     * SECRET
+     ***********************/
+    function renderSecret(){
+      // alltid skjul innhold før riktig kode
+      $("#secretArea").classList.add("hidden");
+      $("#secretHint").classList.remove("hidden");
+    }
+
+    $("#openSecret").addEventListener("click", () => {
+      const code = ($("#secretCodeInput").value || "").trim().toLowerCase();
+      if(code && code === (state.secretCode || "").toLowerCase()){
+        $("#secretArea").classList.remove("hidden");
+        $("#secretHint").classList.add("hidden");
+
+        $("#secretText").textContent = state.secretText || "";
+        $("#secretTextEdit").value = state.secretText || "";
+        $("#secretAudio").value = state.secretAudio || "";
+
+        if(state.secretAudio && state.secretAudio.trim()){
+          $("#audioWrap").classList.remove("hidden");
+          $("#audioPlayer").src = state.secretAudio.trim();
+        }else{
+          $("#audioWrap").classList.add("hidden");
+          $("#audioPlayer").removeAttribute("src");
+        }
+      }else{
+        openModal("Feil kode", "Det var ikke riktig. Prøv kallenavnet deres, eller den lille vitsen bare dere bruker.");
+      }
+    });
+
+    $("#setSecretCode").addEventListener("click", () => {
+      const newCode = prompt("Sett en ny kode (f.eks. et kallenavn):", state.secretCode || "stjerne");
+      if(newCode === null) return;
+      state.secretCode = (newCode || "").trim() || DEFAULTS.secretCode;
+      save();
+      openModal("Kode oppdatert 🔒", "Koden er lagret. Nå føles hemmeligheten enda mer deres.");
+    });
+
+    $("#saveSecret").addEventListener("click", () => {
+      state.secretText = $("#secretTextEdit").value.trim() || DEFAULTS.secretText;
+      state.secretAudio = $("#secretAudio").value.trim();
+      save();
+      $("#secretText").textContent = state.secretText;
+
+      if(state.secretAudio && state.secretAudio.trim()){
+        $("#audioWrap").classList.remove("hidden");
+        $("#audioPlayer").src = state.secretAudio.trim();
+      }else{
+        $("#audioWrap").classList.add("hidden");
+        $("#audioPlayer").removeAttribute("src");
+      }
+      openModal("Lagret 🤍", "Hemmeligheten er oppdatert.");
+    });
+
+    /***********************
+     * EXPORT / IMPORT (kopier)
+     ***********************/
+    $("#exportData").addEventListener("click", async () => {
+      const data = JSON.stringify(state, null, 2);
+      try{
+        await navigator.clipboard.writeText(data);
+        openModal("Kopiert", "Data er kopiert til utklippstavlen. Lim inn på den andre enheten i en fil eller i en chat til deg selv.");
+      }catch(e){
+        openModal("Klar", "Kopier manuelt:", "Åpner JSON i en prompt.");
+        alert(data);
+      }
+    });
+
+    /***********************
+     * INIT
+     ***********************/
+    function init(){
+      renderFront();
+      renderDailyStatus();
+      renderSecret();
+      // Oppdater tellere i bakgrunnen
+      $("#memCount").textContent = `${state.memories.length} minner`;
+      $("#jarCount").textContent = `${state.jar.length} lapper`;
+    }
+    init();
+  </script>
+</body>
+</html>
