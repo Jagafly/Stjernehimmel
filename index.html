@@ -4,18 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Stjernene våre</title>
+
+  <!-- PWA / app-følelse (du legger inn filene senere) -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico">
+  <meta name="theme-color" content="#050815">
+
   <style>
     :root{
       --bg1:#050815;
       --bg2:#0b1230;
       --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
       --line: rgba(255,255,255,.14);
       --accent: #9cc4ff;
       --accent2:#ffd6a6;
-      --good:#a8ffcb;
       --danger:#ff9fb3;
       --shadow: 0 18px 45px rgba(0,0,0,.45);
       --radius: 18px;
@@ -25,12 +29,16 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color: var(--text);
-      background: radial-gradient(1200px 800px at 30% 20%, #1a2a6c22, transparent 70%),
-                  radial-gradient(1000px 700px at 80% 10%, #ffb86b18, transparent 65%),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      background:
+        url("assets/bg.jpg") center/cover fixed,
+        radial-gradient(1200px 800px at 30% 20%, #1a2a6c22, transparent 70%),
+        radial-gradient(1000px 700px at 80% 10%, #ffb86b18, transparent 65%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
       min-height:100vh;
       overflow-x:hidden;
     }
+
+    /* Stjerner overlay */
     .stars, .stars2{
       position:fixed; inset:0; pointer-events:none; z-index:-1;
       background-repeat: repeat;
@@ -98,6 +106,8 @@
       font-size:13px;
       transition: transform .08s ease, background .2s ease, border .2s ease;
       backdrop-filter: blur(10px);
+      text-decoration:none;
+      display:inline-flex; align-items:center; gap:8px;
     }
     .tab:hover{ background: rgba(255,255,255,.08) }
     .tab:active{ transform: translateY(1px) }
@@ -137,7 +147,7 @@
     .sep{ height:1px; background: var(--line); margin: 14px 0; }
 
     .hero{
-      min-height: 240px;
+      min-height: 260px;
       position:relative;
       display:flex;
       align-items:flex-end;
@@ -150,9 +160,9 @@
     .hero .big{
       font-size: 22px;
       line-height: 1.25;
-      font-weight: 750;
+      font-weight: 760;
       margin: 0;
-      max-width: 38ch;
+      max-width: 44ch;
       text-shadow: 0 12px 30px rgba(0,0,0,.5);
     }
     .hero .small{
@@ -193,9 +203,8 @@
       border-color: rgba(255,159,179,.55);
       background: linear-gradient(180deg, rgba(255,159,179,.18), rgba(255,255,255,.03));
     }
-    .ghost{
-      background: transparent;
-    }
+    .ghost{ background: transparent; }
+
     input, textarea{
       width:100%;
       border:1px solid var(--line);
@@ -265,6 +274,7 @@
       color: var(--text);
       font-size: 13px;
       line-height: 1.5;
+      white-space: pre-wrap;
     }
     .timg{
       margin-top: 10px;
@@ -282,7 +292,7 @@
       padding: 6px 8px;
       border-radius: 10px;
       font-size:12px;
-      opacity:.9;
+      opacity:.95;
     }
 
     /* Modal */
@@ -323,6 +333,7 @@
       line-height:1.5;
       margin: 8px 0 0;
       color: var(--text);
+      white-space: pre-wrap;
     }
     .muted{ color: var(--muted); font-size: 13px; line-height:1.5; }
 
@@ -387,6 +398,7 @@
       font-size: 13px;
       line-height: 1.5;
       color: var(--text);
+      white-space: pre-wrap;
     }
     .draw .hint{
       font-size: 12px; color: var(--muted);
@@ -405,6 +417,21 @@
     }
     a{ color: var(--accent); text-decoration:none; }
     a:hover{ text-decoration:underline; }
+
+    /* liten musikk-chip */
+    .musicChip{
+      display:flex; align-items:center; gap:10px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+    }
+    .musicChip .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent2));
+      box-shadow: 0 0 18px rgba(255,214,166,.35);
+    }
   </style>
 </head>
 
@@ -422,6 +449,8 @@
       <button class="tab" data-view="timeline">Minnekart</button>
       <button class="tab" data-view="jar">Fremtidskrukke</button>
       <button class="tab" data-view="secret">Hemmelighet</button>
+      <a class="tab" href="letters/why-i-love-you.html">Brev</a>
+      <a class="tab" href="secret/index.html">Hemmelig galleri</a>
     </nav>
   </header>
 
@@ -437,17 +466,31 @@
                 <p class="small" id="frontSub">
                   En liten privat verden – bare for dere. Når avstand kjennes litt for langt, kan dere alltid komme hit.
                 </p>
+
                 <div class="pill">
-                  <span>📍</span>
+                  <span>🌙</span>
                   <span>I kveld er vi under <b>samme himmel</b>.</span>
                 </div>
+
                 <div class="btnrow">
                   <button class="primary" id="btnOpenToday">Åpne i dag</button>
                   <button id="btnHug">Send et klem</button>
                   <button class="danger" id="btnNeed">Jeg trenger deg litt nå</button>
                 </div>
+
+                <div class="musicChip">
+                  <div class="dot"></div>
+                  <div style="flex:1;">
+                    <div style="font-size:12px; color:var(--muted);">Bakgrunnslyd (valgfritt)</div>
+                    <div style="font-size:13px;">Sett inn <b>assets/audio/stars.mp3</b> og trykk spill.</div>
+                  </div>
+                  <button id="btnPlayMusic" class="mini">Spill</button>
+                  <button id="btnPauseMusic" class="mini">Pause</button>
+                </div>
+
               </div>
             </div>
+
             <div class="inner">
               <div class="title">
                 <div>
@@ -496,7 +539,7 @@
               <div class="title">
                 <div>
                   <h2>Rask oppdatering</h2>
-                  <p>Legg inn en ny minnekort eller en ny lapp til fremtidskrukka, uten å gjøre et “prosjekt” av det.</p>
+                  <p>Legg inn et nytt minne eller en fremtidslapp uten at det blir et “prosjekt”.</p>
                 </div>
               </div>
 
@@ -508,17 +551,17 @@
                 <input id="memDate" placeholder="YYYY-MM-DD" />
                 <label>Hva gjorde dagen fin?</label>
                 <textarea id="memText" placeholder="Et lite minne..."></textarea>
-                <label>Bilde (valgfritt)</label>
+
+                <label>Bilde (valgfritt) – velg fra filer/kamerarull</label>
                 <input id="memImgFile" type="file" accept="image/*" />
-                <div class="muted" style="margin-top:8px;">Du kan velge bilde fra filer/kamerarull.</div>
                 <img id="memPreview" class="timg" style="display:none; margin-top:10px;" alt="Forhåndsvisning" />
-                <input id="memImgFile" type="file" accept="image/*" capture="environment" />
 
                 <div class="btnrow">
                   <button class="primary" id="addMemory">Legg til</button>
                 </div>
+
                 <div class="muted" style="margin-top:8px;">
-                  Tips: Bilde-URL kan være fra et bilde dere har lastet opp et sted. Eller la det stå tomt.
+                  Bildet komprimeres automatisk før lagring (så det ikke fyller opp alt).
                 </div>
               </div>
 
@@ -537,8 +580,23 @@
 
               <button class="ghost" id="exportData">Eksporter data (kopier)</button>
               <p class="muted" style="margin:8px 0 0;">
-                Praktisk hvis dere bytter enhet: kopier JSON og lim inn på den andre.
+                Praktisk hvis dere bytter enhet: kopier JSON og lim inn på den andre (du kan også lagre det i Notes).
               </p>
+
+              <details style="margin-top:10px;">
+                <summary style="cursor:pointer; color:var(--muted); font-size:13px;">
+                  Importer data (lim inn)
+                </summary>
+                <label>Lim inn JSON her</label>
+                <textarea id="importBox" placeholder="{ ... }"></textarea>
+                <div class="btnrow">
+                  <button id="importData" class="primary">Importer</button>
+                </div>
+                <p class="muted" style="margin:8px 0 0;">
+                  Dette overskriver lokale data på denne enheten.
+                </p>
+              </details>
+
             </div>
           </div>
         </div>
@@ -552,7 +610,7 @@
           <div class="title">
             <div>
               <h2>Minnekart</h2>
-              <p>Små kort dere kan bla i. Dato + et bilde + hva som gjorde dagen fin.</p>
+              <p>Små kort dere kan bla i. Dato + bilde + hva som gjorde dagen fin.</p>
             </div>
             <div class="kicker">
               <span class="badge" id="memCount">0 minner</span>
@@ -650,7 +708,7 @@
               </div>
 
               <div class="muted" style="margin-top:8px;">
-                Lyd: enklest hvis du legger en mp3 et sted som gir direkte lenke. Hvis ikke, dropp lyd – teksten gjør jobben.
+                Du kan også bruke bakgrunnslyden på forsiden i stedet, hvis du vil holde det enkelt.
               </div>
             </details>
 
@@ -665,7 +723,7 @@
               <div>
                 <div style="color:var(--text); font-weight:700; margin-bottom:6px;">Lite tips</div>
                 <div>
-                  Sett koden til et kallenavn eller en intern vits dere alltid bruker. Da føles siden “låst” på en søt måte.
+                  Sett koden til et kallenavn eller en intern vits dere alltid bruker.
                 </div>
               </div>
             </div>
@@ -681,7 +739,7 @@
     <div>Alt lagres lokalt i nettleseren (localStorage).</div>
   </footer>
 
-  <!-- MODALS -->
+  <!-- MODAL -->
   <div class="overlay" id="overlay">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="bar">
@@ -701,6 +759,9 @@
   </div>
 
   <div class="hug" id="hugFX"></div>
+
+  <!-- Lydfil (du legger den inn i repoet senere) -->
+  <audio id="bgm" src="assets/audio/stars.mp3" loop></audio>
 
   <script>
     /***********************
@@ -735,10 +796,7 @@
       secretCode: "stjerne",
       secretText: "Hei du. Dette er den siden som bare åpner seg når du bruker vårt lille ord. Hvis du leser dette nå, vil jeg at du skal vite at jeg er stolt av deg – og at jeg elsker deg på en måte som gjør avstand litt mindre farlig. Når det blir tungt: legg hånden på brystet og pust rolig. Jeg er der, i tankene mine, med deg.",
       secretAudio: "",
-      memories: [
-        // Du kan starte tomt, eller legge inn noen eksempler:
-        // { id, date:"2025-12-24", text:"Vi gikk en tur i kulda og holdt hender.", img:"https://..." }
-      ],
+      memories: [],
       jar: [
         "Lage frokost sammen og ikke skynde oss",
         "Gå en lang kveldstur og snakke om alt",
@@ -750,13 +808,12 @@
     /***********************
      * STORAGE
      ***********************/
-    const KEY = "stjernene_v1";
+    const KEY = "stjernene_v2";
     const load = () => {
       try{
         const raw = localStorage.getItem(KEY);
         if(!raw) return structuredClone(DEFAULTS);
         const parsed = JSON.parse(raw);
-        // merge defaults (for nye felt i fremtiden)
         return {
           ...structuredClone(DEFAULTS),
           ...parsed,
@@ -768,15 +825,16 @@
         return structuredClone(DEFAULTS);
       }
     };
+
     const save = () => {
-      try {
+      try{
         localStorage.setItem(KEY, JSON.stringify(state));
         return true;
-      } catch (e) {
+      }catch(e){
         openModal(
           "Lagring nesten full",
-          "Nettleseren din har ikke mer plass til å lagre bilder lokalt.",
-          "Tips: Slett noen gamle minnekort, eller bruk mindre bilder (de komprimeres allerede)."
+          "Nettleseren har ikke mer plass til å lagre bilder lokalt.",
+          "Tips: Slett noen gamle minnekort, eller legg inn mindre bilder."
         );
         return false;
       }
@@ -789,8 +847,8 @@
      ***********************/
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => [...document.querySelectorAll(sel)];
+
     const todayKey = () => {
-      // stabil per dag (lokal dato)
       const d = new Date();
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -800,17 +858,34 @@
     const rand = (arr) => arr[Math.floor(Math.random()*arr.length)];
     const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
 
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
     /***********************
      * NAV / VIEWS
      ***********************/
     function showView(name){
-      $$("#nav .tab").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+      $$("#nav .tab").forEach(b => {
+        if(b.tagName.toLowerCase() === "button"){
+          b.classList.toggle("active", b.dataset.view === name);
+        }
+      });
       $$("#view-home, #view-timeline, #view-jar, #view-secret").forEach(v => v.classList.add("hidden"));
       $(`#view-${name}`).classList.remove("hidden");
       if(name === "timeline") renderTimeline();
       if(name === "jar") renderJar();
     }
-    $$("#nav .tab").forEach(b => b.addEventListener("click", () => showView(b.dataset.view)));
+    $$("#nav .tab").forEach(b => {
+      if(b.tagName.toLowerCase() === "button"){
+        b.addEventListener("click", () => showView(b.dataset.view));
+      }
+    });
 
     /***********************
      * FRONT TEXT
@@ -842,16 +917,10 @@
       $("#needActions").classList.add("hidden");
       $("#overlay").classList.add("show");
     }
-    function closeModal(){
-      $("#overlay").classList.remove("show");
-    }
+    function closeModal(){ $("#overlay").classList.remove("show"); }
     $("#closeModal").addEventListener("click", closeModal);
-    $("#overlay").addEventListener("click", (e) => {
-      if(e.target.id === "overlay") closeModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") closeModal();
-    });
+    $("#overlay").addEventListener("click", (e) => { if(e.target.id === "overlay") closeModal(); });
+    document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
 
     /***********************
      * DAILY MESSAGE
@@ -861,12 +930,10 @@
       const opened = (state.dailyOpened && state.dailyOpened.date === k);
       $("#todayBadge").textContent = opened ? `Åpnet: ${k}` : "Ikke åpnet i dag";
     }
-
     function openToday(){
       const k = todayKey();
       state.dailyOpened = state.dailyOpened || {};
       if(state.dailyOpened.date !== k){
-        // velg en ny setning for denne dagen
         state.dailyOpened = { date: k, text: rand(state.dailyPool) };
         save();
       }
@@ -884,25 +951,23 @@
     }
     $("#btnOpenToday").addEventListener("click", openToday);
 
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
     /***********************
      * HUG
      ***********************/
     function sendHug(){
       const line = rand(state.hugLines);
-      // FX
+
+      // ekstra stjerneskudd hvis effects.js finnes
+      try{
+        if(window.__sparkleBurst){
+          window.__sparkleBurst(window.innerWidth/2, window.innerHeight/2);
+        }
+      }catch(e){}
+
+      // FX i midten
       const fx = $("#hugFX");
       fx.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,214,166,.55), rgba(156,196,255,.22), transparent 70%)`;
       fx.classList.remove("show");
-      // restart animation
       void fx.offsetWidth;
       fx.classList.add("show");
 
@@ -938,10 +1003,60 @@
     $("#btnNeed").addEventListener("click", needYou);
 
     /***********************
-     * MEMORIES
+     * MEMORIES + FILE UPLOAD
      ***********************/
+    let pendingMemImage = "";
+
+    $("#memImgFile").addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) {
+        pendingMemImage = "";
+        $("#memPreview").style.display = "none";
+        $("#memPreview").removeAttribute("src");
+        return;
+      }
+      try {
+        pendingMemImage = await fileToCompressedDataURL(file, 1400, 0.82);
+        $("#memPreview").src = pendingMemImage;
+        $("#memPreview").style.display = "block";
+      } catch (err) {
+        pendingMemImage = "";
+        $("#memPreview").style.display = "none";
+        $("#memPreview").removeAttribute("src");
+        openModal("Ops", "Kunne ikke lese bildet. Prøv et annet bilde.");
+      }
+    });
+
+    function fileToCompressedDataURL(file, maxSide = 1400, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            let { width, height } = img;
+            const scale = Math.min(1, maxSide / Math.max(width, height));
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            resolve(dataUrl);
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
     function sortMemories(){
-      // nyeste først (dato som tekst YYYY-MM-DD)
       state.memories.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
     }
 
@@ -975,7 +1090,6 @@
         wrap.appendChild(card);
       });
 
-      // delete handlers
       $$("[data-del]").forEach(btn => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-del");
@@ -989,16 +1103,25 @@
       const date = $("#memDate").value.trim() || todayKey();
       const text = $("#memText").value.trim();
       const img = pendingMemImage || "";
+
+      if(!text){
+        openModal("Liten ting", "Skriv en kort tekst om hva som gjorde dagen fin.");
+        return;
+      }
+
       state.memories.unshift({ id: uid(), date, text, img });
 
       // reset
+      $("#memDate").value = "";
+      $("#memText").value = "";
       pendingMemImage = "";
       $("#memImgFile").value = "";
       $("#memPreview").style.display = "none";
       $("#memPreview").removeAttribute("src");
 
-      save();
-      openModal("Lagt til ✨", "Minnekortet er lagret. Dere bygger historien deres litt etter litt.");
+      if(save()){
+        openModal("Lagt til ✨", "Minnekortet er lagret.");
+      }
     });
 
     /***********************
@@ -1010,7 +1133,7 @@
       list.innerHTML = "";
 
       if(state.jar.length === 0){
-        list.innerHTML = `<div class="note">Ingen lapper enda. Legg til en fra forsiden ❤️</div>`;
+        list.innerHTML = `<div class="note">Ingen lapper enda. Legg til en idé fra forsiden ❤️</div>`;
         return;
       }
 
@@ -1044,8 +1167,9 @@
       }
       state.jar.unshift(idea);
       $("#jarIdea").value = "";
-      save();
-      openModal("Lapp lagt i krukka 🫙", "Gleder meg allerede til den dagen.");
+      if(save()){
+        openModal("Lapp lagt i krukka 🫙", "Gleder meg allerede til den dagen.");
+      }
     });
 
     $("#drawJar").addEventListener("click", () => {
@@ -1063,7 +1187,6 @@
      * SECRET
      ***********************/
     function renderSecret(){
-      // alltid skjul innhold før riktig kode
       $("#secretArea").classList.add("hidden");
       $("#secretHint").classList.remove("hidden");
     }
@@ -1095,7 +1218,7 @@
       if(newCode === null) return;
       state.secretCode = (newCode || "").trim() || DEFAULTS.secretCode;
       save();
-      openModal("Kode oppdatert 🔒", "Koden er lagret. Nå føles hemmeligheten enda mer deres.");
+      openModal("Kode oppdatert 🔒", "Koden er lagret.");
     });
 
     $("#saveSecret").addEventListener("click", () => {
@@ -1115,18 +1238,56 @@
     });
 
     /***********************
-     * EXPORT / IMPORT (kopier)
+     * EXPORT / IMPORT
      ***********************/
     $("#exportData").addEventListener("click", async () => {
       const data = JSON.stringify(state, null, 2);
       try{
         await navigator.clipboard.writeText(data);
-        openModal("Kopiert", "Data er kopiert til utklippstavlen. Lim inn på den andre enheten i en fil eller i en chat til deg selv.");
+        openModal("Kopiert", "Data er kopiert til utklippstavlen.");
       }catch(e){
-        openModal("Klar", "Kopier manuelt:", "Åpner JSON i en prompt.");
         alert(data);
       }
     });
+
+    $("#importData").addEventListener("click", () => {
+      const raw = ($("#importBox").value || "").trim();
+      if(!raw){
+        openModal("Mangler", "Lim inn JSON først.");
+        return;
+      }
+      try{
+        const parsed = JSON.parse(raw);
+        state = {
+          ...structuredClone(DEFAULTS),
+          ...parsed,
+          needActions: parsed.needActions ?? structuredClone(DEFAULTS.needActions),
+          memories: parsed.memories ?? [],
+          jar: parsed.jar ?? []
+        };
+        save();
+        $("#importBox").value = "";
+        openModal("Importert", "Data er importert på denne enheten.");
+        renderFront();
+        renderDailyStatus();
+        renderSecret();
+      }catch(e){
+        openModal("Feil", "JSON-en kunne ikke leses. Sjekk at du har kopiert alt.");
+      }
+    });
+
+    /***********************
+     * MUSIC (trykk for å spille)
+     ***********************/
+    const bgm = $("#bgm");
+    $("#btnPlayMusic").addEventListener("click", async () => {
+      try{
+        await bgm.play();
+      }catch(e){
+        openModal("Musikk", "Nettleseren blokkerer noen ganger lyd. Prøv igjen, eller sjekk at filen finnes: assets/audio/stars.mp3");
+      }
+    });
+    $("#btnPauseMusic").addEventListener("click", () => bgm.pause());
 
     /***********************
      * INIT
@@ -1135,11 +1296,13 @@
       renderFront();
       renderDailyStatus();
       renderSecret();
-      // Oppdater tellere i bakgrunnen
       $("#memCount").textContent = `${state.memories.length} minner`;
       $("#jarCount").textContent = `${state.jar.length} lapper`;
     }
     init();
   </script>
+
+  <!-- Valgfri: stjerneskudd-effekt ved klem (legg inn effects.js senere) -->
+  <script src="effects.js"></script>
 </body>
 </html>
