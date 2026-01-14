@@ -545,6 +545,19 @@
 
               <div class="sep"></div>
 
+              <!-- 🌍 SKY-SYNK (lagt til) -->
+              <div>
+                <h3 style="margin:0 0 8px; font-size:14px;">🌍 Sky-synk</h3>
+                <label>Rom-kode (del denne med henne)</label>
+                <input id="roomId" placeholder="f.eks. stjernene-våre-2026" />
+                <div class="btnrow">
+                  <button class="primary" id="connectCloud">Koble til sky</button>
+                </div>
+                <div class="muted" id="cloudStatus" style="margin-top:8px;">Ikke koblet</div>
+              </div>
+
+              <div class="sep"></div>
+
               <div>
                 <h3 style="margin:0 0 8px; font-size:14px;">Legg til minnekort</h3>
                 <label>Dato (f.eks. 2026-01-13)</label>
@@ -580,7 +593,7 @@
 
               <button class="ghost" id="exportData">Eksporter data (kopier)</button>
               <p class="muted" style="margin:8px 0 0;">
-                Praktisk hvis dere bytter enhet: kopier JSON og lim inn på den andre (du kan også lagre det i Notes).
+                Praktisk hvis dere vil ta backup: kopier JSON og lagre i Notes / send til deg selv.
               </p>
 
               <details style="margin-top:10px;">
@@ -593,7 +606,7 @@
                   <button id="importData" class="primary">Importer</button>
                 </div>
                 <p class="muted" style="margin:8px 0 0;">
-                  Dette overskriver lokale data på denne enheten.
+                  Dette overskriver sky-data (hele rommet) når du lagrer etter import.
                 </p>
               </details>
 
@@ -736,7 +749,7 @@
 
   <footer>
     <div>© Stjernene våre — en liten privat verden.</div>
-    <div>Alt lagres lokalt i nettleseren (localStorage).</div>
+    <div>Alt synkes via Firebase (sky) når dere bruker samme rom-kode.</div>
   </footer>
 
   <!-- MODAL -->
@@ -763,6 +776,44 @@
   <!-- Lydfil (du legger den inn i repoet senere) -->
   <audio id="bgm" src="assets/audio/stars.mp3" loop></audio>
 
+  <!-- ✅ FIREBASE (MÅ ligge for seg selv, ikke inni andre scripts) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+    window.__firebase = {};
+
+    window.__firebase.config = {
+      apiKey: "AIzaSyBoxgjNK4lXdK2AF0YyhiaIhzBzoD3IcM0",
+      authDomain: "stjernehimmelen-46eef.firebaseapp.com",
+      projectId: "stjernehimmelen-46eef",
+      storageBucket: "stjernehimmelen-46eef.firebasestorage.app",
+      messagingSenderId: "449404387583",
+      appId: "1:449404387583:web:e8052c557ad99658940cca"
+    };
+
+    const app = initializeApp(window.__firebase.config);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.__firebase.connect = async (roomId, onRemote) => {
+      await signInAnonymously(auth);
+      const ref = doc(db, "rooms", roomId);
+
+      // lytter på sky-data
+      onSnapshot(ref, snap => {
+        if (snap.exists()) onRemote(snap.data().state);
+      });
+
+      // funksjon som lagrer til sky
+      return async (state) => {
+        await setDoc(ref, { state }, { merge: true });
+      };
+    };
+  </script>
+
+  <!-- ✅ APP-LOGIKK (din store kode, men lagring = sky) -->
   <script>
     /***********************
      * ENKELT Å OPPDATERE
@@ -806,38 +857,20 @@
     };
 
     /***********************
-     * STORAGE
+     * STORAGE (SKY)
      ***********************/
-    const KEY = "stjernene_v2";
-    const load = () => {
-      try{
-        const raw = localStorage.getItem(KEY);
-        if(!raw) return structuredClone(DEFAULTS);
-        const parsed = JSON.parse(raw);
-        return {
-          ...structuredClone(DEFAULTS),
-          ...parsed,
-          needActions: parsed.needActions ?? structuredClone(DEFAULTS.needActions),
-          memories: parsed.memories ?? [],
-          jar: parsed.jar ?? []
-        };
-      }catch(e){
-        return structuredClone(DEFAULTS);
-      }
-    };
+    let cloudSave = null;
+    const load = () => structuredClone(DEFAULTS);
 
     const save = () => {
-      try{
-        localStorage.setItem(KEY, JSON.stringify(state));
-        return true;
-      }catch(e){
-        openModal(
-          "Lagring nesten full",
-          "Nettleseren har ikke mer plass til å lagre bilder lokalt.",
-          "Tips: Slett noen gamle minnekort, eller legg inn mindre bilder."
-        );
-        return false;
+      if (cloudSave) {
+        // ingen await her – vi holder UI raskt
+        cloudSave(state).catch(() => {
+          // hvis offline / rules-feil etc.
+          try { document.getElementById("cloudStatus").textContent = "Synk feilet (sjekk nett / Firebase)"; } catch(e){}
+        });
       }
+      return true;
     };
 
     let state = load();
@@ -957,14 +990,12 @@
     function sendHug(){
       const line = rand(state.hugLines);
 
-      // ekstra stjerneskudd hvis effects.js finnes
       try{
         if(window.__sparkleBurst){
           window.__sparkleBurst(window.innerWidth/2, window.innerHeight/2);
         }
       }catch(e){}
 
-      // FX i midten
       const fx = $("#hugFX");
       fx.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,214,166,.55), rgba(156,196,255,.22), transparent 70%)`;
       fx.classList.remove("show");
@@ -1111,7 +1142,6 @@
 
       state.memories.unshift({ id: uid(), date, text, img });
 
-      // reset
       $("#memDate").value = "";
       $("#memText").value = "";
       pendingMemImage = "";
@@ -1267,7 +1297,7 @@
         };
         save();
         $("#importBox").value = "";
-        openModal("Importert", "Data er importert på denne enheten.");
+        openModal("Importert", "Data er importert til dette rommet (sky).");
         renderFront();
         renderDailyStatus();
         renderSecret();
@@ -1288,6 +1318,43 @@
       }
     });
     $("#btnPauseMusic").addEventListener("click", () => bgm.pause());
+
+    /***********************
+     * SKY-SYNK HANDLER (NY)
+     ***********************/
+    $("#connectCloud").addEventListener("click", async () => {
+      const room = ($("#roomId").value || "").trim();
+      if(!room) return alert("Skriv rom-kode");
+
+      $("#cloudStatus").textContent = "Kobler til…";
+
+      try{
+        cloudSave = await window.__firebase.connect(room, (remoteState) => {
+          state = {
+            ...structuredClone(DEFAULTS),
+            ...(remoteState || {})
+          };
+
+          // oppdater UI på remote sync
+          renderFront();
+          renderDailyStatus();
+          renderSecret();
+
+          // hvis brukeren står på timeline/jar, oppdater de også
+          try{ renderTimeline(); }catch(e){}
+          try{ renderJar(); }catch(e){}
+          $("#memCount").textContent = `${state.memories.length} minner`;
+          $("#jarCount").textContent = `${state.jar.length} lapper`;
+        });
+
+        $("#cloudStatus").textContent = "Tilkoblet 🌍 (synker nå)";
+        // send initial state (så rommet får innhold hvis det var tomt)
+        save();
+      }catch(e){
+        $("#cloudStatus").textContent = "Kunne ikke koble (sjekk Auth/Rules)";
+        openModal("Sky-synk feilet", "Sjekk at Anonymous Auth er på og at Firestore Rules tillater auth-brukere.");
+      }
+    });
 
     /***********************
      * INIT
