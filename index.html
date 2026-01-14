@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Stjernene våre</title>
 
-  <!-- PWA / app-følelse (du legger inn filene senere) -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="favicon.ico">
   <meta name="theme-color" content="#050815">
@@ -38,7 +37,6 @@
       overflow-x:hidden;
     }
 
-    /* Stjerner overlay */
     .stars, .stars2{
       position:fixed; inset:0; pointer-events:none; z-index:-1;
       background-repeat: repeat;
@@ -233,11 +231,7 @@
       line-height: 1.5;
     }
 
-    /* Timeline */
-    .timeline{
-      position:relative;
-      padding-left: 14px;
-    }
+    .timeline{ position:relative; padding-left: 14px; }
     .timeline:before{
       content:"";
       position:absolute;
@@ -265,10 +259,7 @@
     .tmeta{
       display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
     }
-    .tdate{
-      font-size:12px; color: var(--accent);
-      letter-spacing:.2px;
-    }
+    .tdate{ font-size:12px; color: var(--accent); letter-spacing:.2px; }
     .ttext{
       margin: 8px 0 0;
       color: var(--text);
@@ -285,9 +276,7 @@
       object-fit: cover;
       background: rgba(0,0,0,.2);
     }
-    .minirow{
-      display:flex; gap:8px; align-items:center; justify-content:flex-end;
-    }
+    .minirow{ display:flex; gap:8px; align-items:center; justify-content:flex-end; }
     .mini{
       padding: 6px 8px;
       border-radius: 10px;
@@ -295,7 +284,6 @@
       opacity:.95;
     }
 
-    /* Modal */
     .overlay{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -337,7 +325,6 @@
     }
     .muted{ color: var(--muted); font-size: 13px; line-height:1.5; }
 
-    /* Hug animation */
     .hug{
       position:fixed;
       left: 50%; top: 50%;
@@ -348,9 +335,7 @@
       opacity:0;
       z-index: 60;
     }
-    .hug.show{
-      animation: pop 1.2s ease forwards;
-    }
+    .hug.show{ animation: pop 1.2s ease forwards; }
     @keyframes pop{
       0%{ opacity:0; transform: translate(-50%,-50%) scale(.2); filter: blur(0); }
       15%{ opacity:1; transform: translate(-50%,-50%) scale(1.2); }
@@ -370,14 +355,10 @@
       border-radius: 999px;
     }
     .rightcol .card{ position:sticky; top: 14px; }
-    @media (max-width: 900px){
-      .rightcol .card{ position:static; }
-    }
+    @media (max-width: 900px){ .rightcol .card{ position:static; } }
 
     .hidden{ display:none !important; }
-    .list{
-      display:flex; flex-direction:column; gap:10px;
-    }
+    .list{ display:flex; flex-direction:column; gap:10px; }
     .item{
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.05);
@@ -400,9 +381,7 @@
       color: var(--text);
       white-space: pre-wrap;
     }
-    .draw .hint{
-      font-size: 12px; color: var(--muted);
-    }
+    .draw .hint{ font-size: 12px; color: var(--muted); }
 
     footer{
       max-width:1100px;
@@ -418,7 +397,6 @@
     a{ color: var(--accent); text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    /* liten musikk-chip */
     .musicChip{
       display:flex; align-items:center; gap:10px;
       margin-top: 12px;
@@ -455,7 +433,6 @@
   </header>
 
   <main>
-    <!-- HOME -->
     <section id="view-home">
       <div class="grid">
         <div class="leftcol">
@@ -545,15 +522,16 @@
 
               <div class="sep"></div>
 
-              <!-- 🌍 SKY-SYNK (lagt til) -->
               <div>
                 <h3 style="margin:0 0 8px; font-size:14px;">🌍 Sky-synk</h3>
                 <label>Rom-kode (del denne med henne)</label>
                 <input id="roomId" placeholder="f.eks. stjernene-våre-2026" />
                 <div class="btnrow">
                   <button class="primary" id="connectCloud">Koble til sky</button>
+                  <button class="ghost" id="disconnectCloud">Koble fra</button>
                 </div>
                 <div class="muted" id="cloudStatus" style="margin-top:8px;">Ikke koblet</div>
+                <div class="muted" id="localStatus" style="margin-top:6px;">Lokal lagring: OK</div>
               </div>
 
               <div class="sep"></div>
@@ -593,7 +571,7 @@
 
               <button class="ghost" id="exportData">Eksporter data (kopier)</button>
               <p class="muted" style="margin:8px 0 0;">
-                Praktisk hvis dere vil ta backup: kopier JSON og lagre i Notes / send til deg selv.
+                Praktisk backup: kopier JSON og lagre i Notes / send til deg selv.
               </p>
 
               <details style="margin-top:10px;">
@@ -606,7 +584,7 @@
                   <button id="importData" class="primary">Importer</button>
                 </div>
                 <p class="muted" style="margin:8px 0 0;">
-                  Dette overskriver sky-data (hele rommet) når du lagrer etter import.
+                  Dette overskriver data (lokalt + i sky når du er koblet).
                 </p>
               </details>
 
@@ -616,7 +594,6 @@
       </div>
     </section>
 
-    <!-- TIMELINE -->
     <section id="view-timeline" class="hidden">
       <div class="card">
         <div class="inner">
@@ -630,13 +607,11 @@
             </div>
           </div>
           <div class="sep"></div>
-
           <div class="timeline" id="timelineList"></div>
         </div>
       </div>
     </section>
 
-    <!-- JAR -->
     <section id="view-jar" class="hidden">
       <div class="card">
         <div class="inner">
@@ -664,13 +639,11 @@
           </div>
 
           <div class="sep"></div>
-
           <div class="list" id="jarList"></div>
         </div>
       </div>
     </section>
 
-    <!-- SECRET -->
     <section id="view-secret" class="hidden">
       <div class="card">
         <div class="inner">
@@ -735,9 +708,7 @@
               <div style="font-size:16px;">💡</div>
               <div>
                 <div style="color:var(--text); font-weight:700; margin-bottom:6px;">Lite tips</div>
-                <div>
-                  Sett koden til et kallenavn eller en intern vits dere alltid bruker.
-                </div>
+                <div>Sett koden til et kallenavn eller en intern vits dere alltid bruker.</div>
               </div>
             </div>
           </div>
@@ -749,10 +720,9 @@
 
   <footer>
     <div>© Stjernene våre — en liten privat verden.</div>
-    <div>Alt synkes via Firebase (sky) når dere bruker samme rom-kode.</div>
+    <div>Lokalt + Firebase-synk når dere bruker samme rom-kode.</div>
   </footer>
 
-  <!-- MODAL -->
   <div class="overlay" id="overlay">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="bar">
@@ -773,14 +743,13 @@
 
   <div class="hug" id="hugFX"></div>
 
-  <!-- Lydfil (du legger den inn i repoet senere) -->
   <audio id="bgm" src="assets/audio/stars.mp3" loop></audio>
 
-  <!-- ✅ FIREBASE (MÅ ligge for seg selv, ikke inni andre scripts) -->
+  <!-- ✅ FIREBASE (module) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
     window.__firebase = {};
 
@@ -797,28 +766,48 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    window.__firebase.connect = async (roomId, onRemote) => {
-      await signInAnonymously(auth);
-      const ref = doc(db, "rooms", roomId);
+    window.__firebase.connect = async ({ roomId, onRemote, onStatus }) => {
+      onStatus?.("logger inn…");
 
-      // lytter på sky-data
-      onSnapshot(ref, snap => {
-        if (snap.exists()) onRemote(snap.data().state);
+      await signInAnonymously(auth);
+
+      // vent til auth faktisk er klar
+      await new Promise((resolve) => {
+        const unsub = onAuthStateChanged(auth, () => { unsub(); resolve(); });
       });
 
-      // funksjon som lagrer til sky
-      return async (state) => {
-        await setDoc(ref, { state }, { merge: true });
+      const ref = doc(db, "rooms", roomId);
+
+      // les en gang (for å vite om rommet finnes)
+      const existing = await getDoc(ref);
+      const exists = existing.exists();
+
+      onStatus?.(exists ? "koblet (rom finnes) 🌍" : "koblet (nytt rom) 🌍");
+
+      // realtime listener
+      const unsubSnap = onSnapshot(ref, snap => {
+        if (snap.exists()) {
+          const data = snap.data();
+          onRemote?.(data?.state || null, data?.updatedAt?.toMillis?.() || Date.now());
+        }
+      });
+
+      // save-funksjon
+      const saveToCloud = async (state) => {
+        await setDoc(ref, { state, updatedAt: serverTimestamp() }, { merge: true });
       };
+
+      return { saveToCloud, unsubSnap, exists };
     };
   </script>
 
-  <!-- ✅ APP-LOGIKK (din store kode, men lagring = sky) -->
+  <!-- ✅ APP (ikke-module) -->
   <script>
     /***********************
-     * ENKELT Å OPPDATERE
+     * DEFAULTS
      ***********************/
     const DEFAULTS = {
+      version: 1,
       frontLine: "Vi ser på de samme stjernene i kveld også.",
       frontSub: "En liten privat verden – bare for dere. Når avstand kjennes litt for langt, kan dere alltid komme hit.",
       dailyPool: [
@@ -853,27 +842,78 @@
         "Gå en lang kveldstur og snakke om alt",
         "Se en film under samme teppe",
         "Kaffe på et sted vi aldri har vært før"
-      ]
+      ],
+      dailyOpened: null
     };
 
     /***********************
-     * STORAGE (SKY)
+     * STORAGE KEYS
      ***********************/
-    let cloudSave = null;
-    const load = () => structuredClone(DEFAULTS);
+    const LS_STATE_KEY = "stjernene_state_v1";
+    const LS_ROOM_KEY  = "stjernene_room_v1";
+    const LS_CLOUD_TS  = "stjernene_cloud_ts_v1"; // sist mottatt oppdatering fra sky
 
-    const save = () => {
-      if (cloudSave) {
-        // ingen await her – vi holder UI raskt
-        cloudSave(state).catch(() => {
-          // hvis offline / rules-feil etc.
-          try { document.getElementById("cloudStatus").textContent = "Synk feilet (sjekk nett / Firebase)"; } catch(e){}
-        });
+    /***********************
+     * LOCAL LOAD/SAVE
+     ***********************/
+    const deepClone = (x) => JSON.parse(JSON.stringify(x));
+
+    function loadLocal() {
+      try {
+        const raw = localStorage.getItem(LS_STATE_KEY);
+        if (!raw) return deepClone(DEFAULTS);
+        const parsed = JSON.parse(raw);
+        return {
+          ...deepClone(DEFAULTS),
+          ...parsed,
+          needActions: parsed.needActions ?? deepClone(DEFAULTS.needActions),
+          memories: parsed.memories ?? [],
+          jar: parsed.jar ?? []
+        };
+      } catch {
+        return deepClone(DEFAULTS);
       }
-      return true;
+    }
+
+    function saveLocal() {
+      try {
+        localStorage.setItem(LS_STATE_KEY, JSON.stringify(state));
+        $("#localStatus").textContent = "Lokal lagring: OK ✅";
+      } catch {
+        $("#localStatus").textContent = "Lokal lagring: FEIL (full lagring?)";
+      }
+    }
+
+    /***********************
+     * CLOUD
+     ***********************/
+    let cloud = {
+      connected: false,
+      roomId: "",
+      saveToCloud: null,
+      unsubSnap: null
     };
 
-    let state = load();
+    // Vi throttler sky-lagring litt for å unngå spam
+    let cloudTimer = null;
+    function saveCloudSoon() {
+      if (!cloud.connected || !cloud.saveToCloud) return;
+      clearTimeout(cloudTimer);
+      cloudTimer = setTimeout(async () => {
+        try {
+          $("#cloudStatus").textContent = "Synker…";
+          await cloud.saveToCloud(state);
+          $("#cloudStatus").textContent = "Tilkoblet 🌍 (synket)";
+        } catch {
+          $("#cloudStatus").textContent = "Synk feilet (sjekk Firebase regler/nett)";
+        }
+      }, 350);
+    }
+
+    /***********************
+     * APP STATE
+     ***********************/
+    let state = loadLocal();
 
     /***********************
      * HELPERS
@@ -898,6 +938,15 @@
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
+    }
+
+    /***********************
+     * SAVE (LOCAL ALWAYS + CLOUD IF CONNECTED)
+     ***********************/
+    function save() {
+      saveLocal();
+      saveCloudSoon();
+      return true;
     }
 
     /***********************
@@ -990,12 +1039,6 @@
     function sendHug(){
       const line = rand(state.hugLines);
 
-      try{
-        if(window.__sparkleBurst){
-          window.__sparkleBurst(window.innerWidth/2, window.innerHeight/2);
-        }
-      }catch(e){}
-
       const fx = $("#hugFX");
       fx.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,214,166,.55), rgba(156,196,255,.22), transparent 70%)`;
       fx.classList.remove("show");
@@ -1050,7 +1093,7 @@
         pendingMemImage = await fileToCompressedDataURL(file, 1400, 0.82);
         $("#memPreview").src = pendingMemImage;
         $("#memPreview").style.display = "block";
-      } catch (err) {
+      } catch {
         pendingMemImage = "";
         $("#memPreview").style.display = "none";
         $("#memPreview").removeAttribute("src");
@@ -1275,7 +1318,7 @@
       try{
         await navigator.clipboard.writeText(data);
         openModal("Kopiert", "Data er kopiert til utklippstavlen.");
-      }catch(e){
+      }catch{
         alert(data);
       }
     });
@@ -1289,72 +1332,105 @@
       try{
         const parsed = JSON.parse(raw);
         state = {
-          ...structuredClone(DEFAULTS),
+          ...deepClone(DEFAULTS),
           ...parsed,
-          needActions: parsed.needActions ?? structuredClone(DEFAULTS.needActions),
+          needActions: parsed.needActions ?? deepClone(DEFAULTS.needActions),
           memories: parsed.memories ?? [],
           jar: parsed.jar ?? []
         };
         save();
         $("#importBox").value = "";
-        openModal("Importert", "Data er importert til dette rommet (sky).");
+        openModal("Importert", "Data er importert (lokalt + sky hvis tilkoblet).");
         renderFront();
         renderDailyStatus();
         renderSecret();
-      }catch(e){
+      }catch{
         openModal("Feil", "JSON-en kunne ikke leses. Sjekk at du har kopiert alt.");
       }
     });
 
     /***********************
-     * MUSIC (trykk for å spille)
+     * MUSIC
      ***********************/
     const bgm = $("#bgm");
     $("#btnPlayMusic").addEventListener("click", async () => {
-      try{
-        await bgm.play();
-      }catch(e){
-        openModal("Musikk", "Nettleseren blokkerer noen ganger lyd. Prøv igjen, eller sjekk at filen finnes: assets/audio/stars.mp3");
-      }
+      try{ await bgm.play(); }
+      catch{ openModal("Musikk", "Nettleseren blokkerer noen ganger lyd. Sjekk at assets/audio/stars.mp3 finnes."); }
     });
     $("#btnPauseMusic").addEventListener("click", () => bgm.pause());
 
     /***********************
-     * SKY-SYNK HANDLER (NY)
+     * SKY-SYNK
      ***********************/
+    async function connectCloud(room) {
+      if (!room) return;
+
+      // stopp gammel listener hvis finnes
+      if (cloud.unsubSnap) { try { cloud.unsubSnap(); } catch {} }
+
+      $("#cloudStatus").textContent = "Kobler til…";
+      localStorage.setItem(LS_ROOM_KEY, room);
+      $("#roomId").value = room;
+
+      try {
+        const res = await window.__firebase.connect({
+          roomId: room,
+          onStatus: (txt) => { $("#cloudStatus").textContent = txt; },
+          onRemote: (remoteState, remoteTs) => {
+            // Hvis vi mottar data fra sky, bruk det
+            if (remoteState) {
+              state = {
+                ...deepClone(DEFAULTS),
+                ...(remoteState || {})
+              };
+              saveLocal(); // bare lokalt, ikke push tilbake nå
+              localStorage.setItem(LS_CLOUD_TS, String(remoteTs || Date.now()));
+              renderFront(); renderDailyStatus(); renderSecret();
+              try { renderTimeline(); } catch {}
+              try { renderJar(); } catch {}
+              $("#cloudStatus").textContent = "Tilkoblet 🌍 (mottok synk)";
+            }
+          }
+        });
+
+        cloud.connected = true;
+        cloud.roomId = room;
+        cloud.saveToCloud = res.saveToCloud;
+        cloud.unsubSnap = res.unsubSnap;
+
+        // Hvis rommet var nytt (ikke finnes), push vår lokale state opp
+        // Hvis rommet finnes: IKKE overskriv automatisk (vi venter på onRemote)
+        if (!res.exists) {
+          $("#cloudStatus").textContent = "Oppretter rom…";
+          await cloud.saveToCloud(state);
+          $("#cloudStatus").textContent = "Tilkoblet 🌍 (rom opprettet)";
+        } else {
+          $("#cloudStatus").textContent = "Tilkoblet 🌍 (venter på synk…)";
+        }
+
+      } catch (e) {
+        cloud.connected = false;
+        cloud.saveToCloud = null;
+        $("#cloudStatus").textContent = "Kunne ikke koble (Auth/Rules?)";
+        openModal("Sky-synk feilet", "Sjekk Firebase: Anonymous Auth + Firestore Rules (se veiledning under).");
+      }
+    }
+
+    function disconnectCloud() {
+      if (cloud.unsubSnap) { try { cloud.unsubSnap(); } catch {} }
+      cloud = { connected:false, roomId:"", saveToCloud:null, unsubSnap:null };
+      localStorage.removeItem(LS_ROOM_KEY);
+      $("#cloudStatus").textContent = "Ikke koblet";
+      openModal("Frakoblet", "Du er koblet fra sky. Lokal lagring fortsetter å fungere.");
+    }
+
     $("#connectCloud").addEventListener("click", async () => {
       const room = ($("#roomId").value || "").trim();
       if(!room) return alert("Skriv rom-kode");
-
-      $("#cloudStatus").textContent = "Kobler til…";
-
-      try{
-        cloudSave = await window.__firebase.connect(room, (remoteState) => {
-          state = {
-            ...structuredClone(DEFAULTS),
-            ...(remoteState || {})
-          };
-
-          // oppdater UI på remote sync
-          renderFront();
-          renderDailyStatus();
-          renderSecret();
-
-          // hvis brukeren står på timeline/jar, oppdater de også
-          try{ renderTimeline(); }catch(e){}
-          try{ renderJar(); }catch(e){}
-          $("#memCount").textContent = `${state.memories.length} minner`;
-          $("#jarCount").textContent = `${state.jar.length} lapper`;
-        });
-
-        $("#cloudStatus").textContent = "Tilkoblet 🌍 (synker nå)";
-        // send initial state (så rommet får innhold hvis det var tomt)
-        save();
-      }catch(e){
-        $("#cloudStatus").textContent = "Kunne ikke koble (sjekk Auth/Rules)";
-        openModal("Sky-synk feilet", "Sjekk at Anonymous Auth er på og at Firestore Rules tillater auth-brukere.");
-      }
+      await connectCloud(room);
     });
+
+    $("#disconnectCloud").addEventListener("click", disconnectCloud);
 
     /***********************
      * INIT
@@ -1365,11 +1441,20 @@
       renderSecret();
       $("#memCount").textContent = `${state.memories.length} minner`;
       $("#jarCount").textContent = `${state.jar.length} lapper`;
+
+      // restore room auto
+      const savedRoom = localStorage.getItem(LS_ROOM_KEY);
+      if (savedRoom) {
+        $("#roomId").value = savedRoom;
+        // auto-connect uten klikk
+        connectCloud(savedRoom);
+      } else {
+        $("#cloudStatus").textContent = "Ikke koblet";
+      }
     }
     init();
   </script>
 
-  <!-- Valgfri: stjerneskudd-effekt ved klem (legg inn effects.js senere) -->
   <script src="effects.js"></script>
 </body>
 </html>
